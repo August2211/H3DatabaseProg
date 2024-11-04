@@ -138,4 +138,21 @@ static void PrintTeamsWithoutTasks()
     }
 }
 
-PrintTeamsWithoutTasks();
+//PrintTeamsWithoutTasks();
+
+static void PrintTeamCurrentTask()
+{
+    using var db = new BloggingContext();
+
+    var teams = db.Teams.Include(team => team.Tasks);
+    foreach (var team in teams)
+    {
+        if (team.Tasks.Count > 0)
+        {
+            Console.WriteLine($"Team: {team.Name}");
+            Console.WriteLine($"- Current task: {team.Tasks.First().Name}");
+        }
+    }
+}
+
+PrintTeamCurrentTask();
