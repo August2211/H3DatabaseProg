@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 
 using var db = new BloggingContext();
@@ -6,25 +7,34 @@ using var db = new BloggingContext();
 // Note: This sample requires the database to be created before running.
 Console.WriteLine($"Database path: {db.DbPath}.");
 
-// Create
-Console.WriteLine("Inserting a new blog");
-db.Add(new Blog { Url = "http://blogs.msdn.com/adonet" });
+Task ProduceSoftwareTask = new();
+ProduceSoftwareTask.Name = "Produce Software";
+ProduceSoftwareTask.Todos = new()
+    {
+        new Todo { Name = "Write code", IsComplete = true },
+        new Todo { Name = "Compile source", IsComplete = true },
+        new Todo { Name = "Test program", IsComplete = false },
+    };
+
+Task BrewCoffeeTask = new();
+BrewCoffeeTask.Name = "Brew Coffee";
+BrewCoffeeTask.Todos = new()
+    {
+        new Todo { Name = "Pour water", IsComplete = true },
+        new Todo { Name = "Pour coffee", IsComplete = true },
+        new Todo { Name = "Turn on", IsComplete = true },
+    };
+
+db.Tasks.Add(ProduceSoftwareTask);
+db.Tasks.Add(BrewCoffeeTask);
 db.SaveChanges();
 
-// Read
-Console.WriteLine("Querying for a blog");
-var blog = db.Blogs
-    .OrderBy(b => b.BlogId)
-    .First();
-
-// Update
-Console.WriteLine("Updating the blog and adding a post");
-blog.Url = "https://devblogs.microsoft.com/dotnet";
-blog.Posts.Add(
-    new Post { Title = "Hello World", Content = "I wrote an app using EF Core!" });
-db.SaveChanges();
-
-// Delete
-Console.WriteLine("Delete the blog");
-db.Remove(blog);
-db.SaveChanges();
+var tasks = db.Tasks.Include(task => task.Todos);
+foreach (var task in tasks)
+{
+    Console.WriteLine($"Task: {task.Name}");
+    foreach (var todo in task.Todos)
+    {
+        Console.WriteLine($"- {todo.Name} is {(todo.IsComplete ? "complete" : "incomplete")}");
+    }
+}
