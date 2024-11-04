@@ -42,4 +42,27 @@ static void SeedTasks()
     }
 }
 
-SeedTasks();
+//SeedTasks();
+
+static void PrintIncompleteTasks()
+{
+    using var db = new BloggingContext();
+
+    var tasks = db.Tasks.Include(task => task.Todos);
+    foreach (var task in tasks)
+    {
+        if (task.Todos.Any(todo => !todo.IsComplete))
+        {
+            Console.WriteLine($"Task: {task.Name}");
+            foreach (var todo in task.Todos)
+            {
+                if (!todo.IsComplete)
+                {
+                    Console.WriteLine($"- {todo.Name}");
+                }
+            }
+        }
+    }
+}
+
+PrintIncompleteTasks();
