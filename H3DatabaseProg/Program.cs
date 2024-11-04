@@ -65,4 +65,43 @@ static void PrintIncompleteTasks()
     }
 }
 
-PrintIncompleteTasks();
+//PrintIncompleteTasks();
+
+static void SeedWorkers()
+{
+    var db = new BloggingContext();
+
+    Team Frontend = new();
+    Frontend.Name = "Frontend";
+    Frontend.Workers = new()
+    {
+        new TeamWorker { Worker = new Worker { Name = "Steen Secher" } },
+        new TeamWorker { Worker = new Worker { Name = "Ejvind Møller" } },
+        new TeamWorker { Worker = new Worker { Name = "Konrad Sommer" } },
+    };
+
+    Team Backend = new();
+    Backend.Name = "Backend";
+    Backend.Workers = new()
+    {
+        new TeamWorker { Worker = new Worker { Name = "Konrad Sommer" } },
+        new TeamWorker { Worker = new Worker { Name = "Sofus Lotus" } },
+        new TeamWorker { Worker = new Worker { Name = "Remo Lademann" } },
+    };
+
+    Team Testere = new();
+    Testere.Name = "Testere";
+    Testere.Workers = new()
+    {
+        new TeamWorker { Worker = new Worker { Name = "Ella Fanth" } },
+        new TeamWorker { Worker = new Worker { Name = "Anne Dam" } },
+        new TeamWorker { Worker = new Worker { Name = "Steen Secher" } },
+    };
+
+    db.Teams.Add(Frontend);
+    db.Teams.Add(Backend);
+    db.Teams.Add(Testere);
+    db.SaveChanges();
+}
+
+SeedWorkers();
