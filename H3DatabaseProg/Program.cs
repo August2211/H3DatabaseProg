@@ -122,4 +122,20 @@ static void SeedWorkers()
     db.SaveChanges();
 }
 
-SeedWorkers();
+//SeedWorkers();
+
+static void PrintTeamsWithoutTasks()
+{
+    using var db = new BloggingContext();
+
+    var teams = db.Teams.Include(team => team.Tasks);
+    foreach (var team in teams)
+    {
+        if (team.Tasks.Count == 0)
+        {
+            Console.WriteLine($"Team: {team.Name}");
+        }
+    }
+}
+
+PrintTeamsWithoutTasks();
