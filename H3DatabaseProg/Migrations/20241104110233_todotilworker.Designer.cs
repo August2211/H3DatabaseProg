@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace H3DatabaseProg.Migrations
 {
     [DbContext(typeof(BloggingContext))]
-    partial class BloggingContextModelSnapshot : ModelSnapshot
+    [Migration("20241104110233_todotilworker")]
+    partial class todotilworker
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
@@ -81,7 +84,7 @@ namespace H3DatabaseProg.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CurrentTaskId")
+                    b.Property<int>("CurrentTaskTaskId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -89,6 +92,8 @@ namespace H3DatabaseProg.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("TeamId");
+
+                    b.HasIndex("CurrentTaskTaskId");
 
                     b.ToTable("Teams");
                 });
@@ -142,7 +147,7 @@ namespace H3DatabaseProg.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CurrentTodoId")
+                    b.Property<int>("CurrentTodoTodoId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -150,6 +155,8 @@ namespace H3DatabaseProg.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("WorkerId");
+
+                    b.HasIndex("CurrentTodoTodoId");
 
                     b.ToTable("Workers");
                 });
@@ -170,6 +177,17 @@ namespace H3DatabaseProg.Migrations
                     b.HasOne("Team", null)
                         .WithMany("Tasks")
                         .HasForeignKey("TeamId");
+                });
+
+            modelBuilder.Entity("Team", b =>
+                {
+                    b.HasOne("Task", "CurrentTask")
+                        .WithMany()
+                        .HasForeignKey("CurrentTaskTaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CurrentTask");
                 });
 
             modelBuilder.Entity("TeamWorker", b =>
@@ -200,6 +218,17 @@ namespace H3DatabaseProg.Migrations
                     b.HasOne("Worker", null)
                         .WithMany("Todos")
                         .HasForeignKey("WorkerId");
+                });
+
+            modelBuilder.Entity("Worker", b =>
+                {
+                    b.HasOne("Todo", "CurrentTodo")
+                        .WithMany()
+                        .HasForeignKey("CurrentTodoTodoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CurrentTodo");
                 });
 
             modelBuilder.Entity("Blog", b =>

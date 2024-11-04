@@ -71,16 +71,20 @@ public class Team
 {
     public int TeamId { get; set; }
     public string Name { get; set; }
+    public List<Task> Tasks { get; set; }
+    public int CurrentTaskId { get; set; }
 
-    public List<TeamWorker> Workers { get; set; } = new List<TeamWorker>();
+    public List<TeamWorker> Workers { get; set; } = new();
 }
 
 public class Worker
 {
     public int WorkerId { get; set; }
     public string Name { get; set; }
+    public List<Todo> Todos { get; set; }
+    public int CurrentTodoId { get; set; }
 
-    public List<TeamWorker> Teams { get; set; } = new List<TeamWorker>();
+    public List<TeamWorker> Teams { get; set; } = new();
 }
 
 public class TeamWorker

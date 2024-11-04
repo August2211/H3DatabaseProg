@@ -79,6 +79,12 @@ static void SeedWorkers()
         new TeamWorker { Worker = new Worker { Name = "Ejvind Møller" } },
         new TeamWorker { Worker = new Worker { Name = "Konrad Sommer" } },
     };
+    Frontend.Tasks = new()
+    {
+        new Task { Name = "Design database" },
+        new Task { Name = "Implement database" },
+    };
+    Frontend.CurrentTaskId = Frontend.Tasks.First().TaskId;
 
     Team Backend = new();
     Backend.Name = "Backend";
@@ -88,6 +94,12 @@ static void SeedWorkers()
         new TeamWorker { Worker = new Worker { Name = "Sofus Lotus" } },
         new TeamWorker { Worker = new Worker { Name = "Remo Lademann" } },
     };
+    Backend.Tasks = new()
+    {
+        new Task { Name = "Design database" },
+        new Task { Name = "Implement database" },
+    };
+    Backend.CurrentTaskId = Backend.Tasks.First().TaskId;
 
     Team Testere = new();
     Testere.Name = "Testere";
@@ -97,6 +109,12 @@ static void SeedWorkers()
         new TeamWorker { Worker = new Worker { Name = "Anne Dam" } },
         new TeamWorker { Worker = new Worker { Name = "Steen Secher" } },
     };
+    Testere.Tasks = new()
+    {
+        new Task { Name = "Test website" },
+        new Task { Name = "Test database" },
+    };
+    Testere.CurrentTaskId = Testere.Tasks.First().TaskId;
 
     db.Teams.Add(Frontend);
     db.Teams.Add(Backend);
