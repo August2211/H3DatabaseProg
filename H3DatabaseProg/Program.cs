@@ -81,8 +81,8 @@ static void SeedWorkers()
     };
     Frontend.Tasks = new()
     {
-        new Task { Name = "Design database" },
-        new Task { Name = "Implement database" },
+        new Task { Name = "Design database", Todos = new() { new Todo { Name = "Design tables" } } },
+        new Task { Name = "Implement database", Todos = new() { new Todo { Name = "Implement tables", IsComplete = true } } }
     };
     Frontend.CurrentTaskId = Frontend.Tasks.First().TaskId;
 
@@ -96,8 +96,8 @@ static void SeedWorkers()
     };
     Backend.Tasks = new()
     {
-        new Task { Name = "Design database" },
-        new Task { Name = "Implement database" },
+        new Task { Name = "Design database", Todos = new() { new Todo { Name = "Design connection" } } },
+        new Task { Name = "Implement database", Todos = new() { new Todo { Name = "Implement connection", IsComplete = true } } }
     };
     Backend.CurrentTaskId = Backend.Tasks.First().TaskId;
 
@@ -111,8 +111,8 @@ static void SeedWorkers()
     };
     Testere.Tasks = new()
     {
-        new Task { Name = "Test website" },
-        new Task { Name = "Test database" },
+        new Task { Name = "Test website", Todos = new() { new Todo { Name = "Test login", IsComplete = true }, new Todo { Name = "Test logout", IsComplete = false } } },
+        new Task { Name = "Test database", Todos = new() { new Todo { Name = "Test connection", IsComplete = false } } }
     };
     Testere.CurrentTaskId = Testere.Tasks.First().TaskId;
 
@@ -155,4 +155,31 @@ static void PrintTeamCurrentTask()
     }
 }
 
-PrintTeamCurrentTask();
+//PrintTeamCurrentTask();
+
+static void PrintTeamProgress()
+{
+    using var db = new BloggingContext();
+
+    var teams = db.Teams.Include(team => team.Tasks).ThenInclude(task => task.Todos);
+    foreach (var team in teams)
+    {
+        if (team.Tasks.Count > 0)
+        {
+            var task = team.Tasks.First();
+            var todos = task.Todos;
+            var completedTodos = todos.Count(todo => todo.IsComplete);
+            int progress = 0;
+            if(todos.Count > 0)
+            {
+                progress = (int)((double)completedTodos / todos.Count * 100);
+            }
+
+            Console.WriteLine($"Team: {team.Name}");
+            Console.WriteLine($"- Current task: {task.Name}");
+            Console.WriteLine($"- Progress: {progress}%");
+        }
+    }
+}
+
+PrintTeamProgress();
